@@ -56,7 +56,7 @@ resource "aws_cloudwatch_log_group" "default_vpc_flow_logs" {
   name              = var.flow_logs_log_group_name
   retention_in_days = var.flow_logs_retention_in_days
 
-  
+  kms_key_id = aws_kms_key.flow_logs.arn
 
   tags = var.tags
 }
@@ -69,8 +69,6 @@ resource "aws_flow_log" "default_vpc_flow_logs" {
   iam_role_arn         = local.is_cw_logs ? var.flow_logs_iam_role_arn : null
   vpc_id               = aws_default_vpc.default[0].id
   traffic_type         = "ALL"
-
-  kms_key_id = aws_kms_key.flow_logs.arn
 
   tags = var.tags
 }
