@@ -47,6 +47,9 @@ resource "aws_s3_bucket" "access_log" {
       storage_class = "GLACIER"
     }
   }
+  versioning {
+    enabled = true
+  }
 
   tags = var.tags
 }
