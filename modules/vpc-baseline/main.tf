@@ -39,6 +39,7 @@ data "aws_iam_policy_document" "kms_key" {
       principals {
         identifiers = ["logs.amazonaws.com"]
         type        = "Service" 
+    }
   }
 }
 
