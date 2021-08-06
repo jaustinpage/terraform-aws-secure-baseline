@@ -35,6 +35,7 @@ resource "aws_flow_log" "default_vpc_flow_logs" {
 # Clears rules associated with default resources.
 # --------------------------------------------------------------------------------------------------
 
+#tfsec:ignore:AWS082
 resource "aws_default_vpc" "default" {
   count = var.enabled ? 1 : 0
 
