@@ -10,11 +10,52 @@ data "aws_availability_zones" "all" {
 # Enable VPC Flow Logs for the default VPC.
 # --------------------------------------------------------------------------------------------------
 
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "kms_key" {
+  statement {
+    actions   = ["kms:*"]
+    effect    = "Allow"
+    sid       = "Allow root user to manage the KMS key and enable IAM policies to allow access to the key."
+    resources = ["*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+    }
+  }
+  statement {
+    actions =[
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey",
+      ]
+
+      effect    = "Allow"
+      resources = ["*"]
+
+      principals {
+        identifiers = ["logs.amazonaws.com"]
+        type        = "Service" 
+  }
+}
+
+resource "aws_kms_key" "flow_logs" {
+  description = "KMS key to manage log encryption at rest"
+  enable_key_rotation = true
+  policy = data.aws_iam_policy_document.kms_key.json
+  tags = var.tags
+}
+
 resource "aws_cloudwatch_log_group" "default_vpc_flow_logs" {
   count = var.enabled && var.enable_flow_logs && local.is_cw_logs ? 1 : 0
 
   name              = var.flow_logs_log_group_name
   retention_in_days = var.flow_logs_retention_in_days
+
+  
 
   tags = var.tags
 }
@@ -27,6 +68,8 @@ resource "aws_flow_log" "default_vpc_flow_logs" {
   iam_role_arn         = local.is_cw_logs ? var.flow_logs_iam_role_arn : null
   vpc_id               = aws_default_vpc.default[0].id
   traffic_type         = "ALL"
+
+  kms_key_id = aws_kms_key.flow_logs.arn
 
   tags = var.tags
 }
