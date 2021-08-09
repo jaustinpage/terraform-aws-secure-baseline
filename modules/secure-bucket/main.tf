@@ -154,11 +154,7 @@ data "aws_iam_policy_document" "content_policy" {
   }
   statement {
     actions = [
-      "s3.HeadBucket",
-      "s3.GetBucketLocation",
-      "s3.PutObject*",
-      "s3.List*",
-      "s3.Get*"
+      "s3.*",
     ]
     effect = "Allow"
     resources = [
