@@ -169,7 +169,7 @@ data "aws_iam_policy_document" "content_policy" {
       type = "*"
       identifiers = ["*"]
     }
-    conditions {
+    condition {
       test = "StringEquals"
       variable  = "aws:PrincipalOrgID"
       values = [
