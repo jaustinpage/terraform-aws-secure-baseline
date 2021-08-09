@@ -54,11 +54,11 @@ resource "aws_s3_bucket" "access_log" {
   tags = var.tags
 }
 
-resource "aws_s3_bucket_policy" "access_log_policy" {
+resource "aws_s3_bucket_policy" "content_policy" {
   count = var.enabled ? 1 : 0
 
   bucket = aws_s3_bucket.access_log[0].id
-  policy = data.aws_iam_policy_document.access_log_policy[0].json
+  policy = data.aws_iam_policy_document.content_policy[0].json
 }
 
 resource "aws_s3_bucket_public_access_block" "access_log" {
@@ -132,7 +132,7 @@ resource "aws_s3_bucket_public_access_block" "content" {
 
 data "aws_organizations_organization" "current" {}
 
-data "aws_iam_policy_document" "access_log_policy" {
+data "aws_iam_policy_document" "content_policy" {
   count = var.enabled ? 1 : 0
 
   statement {
