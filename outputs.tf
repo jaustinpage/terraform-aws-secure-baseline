@@ -132,9 +132,9 @@ output "guardduty_detector" {
 # Outputs from iam-baseline module.
 # --------------------------------------------------------------------------------------------------
 
-output "support_iam_role_arn" {
+output "support_iam_role" {
   description = "The IAM role used for the support user."
-  value       = module.iam_baseline.support_iam_role.arn
+  value       = module.iam_baseline.support_iam_role[0]
 }
 
 # --------------------------------------------------------------------------------------------------
