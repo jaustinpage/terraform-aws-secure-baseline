@@ -9,6 +9,7 @@ terraform {
       # A provider alias should be passed for each AWS region.
       # Reference: https://docs.aws.amazon.com/general/latest/gr/rande.html
       configuration_aliases = [
+        aws.master_account,
         aws.ap-northeast-1, aws.ap-northeast-2, aws.ap-northeast-3,
         aws.ap-south-1,
         aws.ap-southeast-1, aws.ap-southeast-2,

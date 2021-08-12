@@ -20,6 +20,7 @@ locals {
 data "aws_s3_bucket" "external" {
   count  = local.use_external_bucket ? 1 : 0
   bucket = var.audit_log_bucket_name
+  provider = aws.master_account
 }
 
 # --------------------------------------------------------------------------------------------------
