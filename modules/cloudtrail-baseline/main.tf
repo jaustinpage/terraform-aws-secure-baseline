@@ -1,54 +1,11 @@
 # --------------------------------------------------------------------------------------------------
 # CloudWatch Logs group to accept CloudTrail event stream.
 # --------------------------------------------------------------------------------------------------
-
-data "aws_caller_identity" "current" {}
-
-data "aws_iam_policy_document" "kms_key" {
-  statement {
-    actions   = ["kms:*"]
-    effect    = "Allow"
-    sid       = "Allow root user to manage the KMS key and enable IAM policies to allow access to the key."
-    resources = ["*"]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
-    }
-  }
-  statement {
-    actions =[
-        "kms:Encrypt",
-        "kms:Decrypt",
-        "kms:ReEncrypt*",
-        "kms:GenerateDataKey*",
-        "kms:DescribeKey",
-      ]
-
-      effect    = "Allow"
-      resources = ["*"]
-
-      principals {
-        identifiers = ["logs.amazonaws.com"]
-        type        = "Service"
-    }
-  }
-}
-
-resource "aws_kms_key" "cloudtrail_logs" {
-  description = "KMS key to manage log encryption at rest"
-  enable_key_rotation = true
-  policy = data.aws_iam_policy_document.kms_key.json
-  tags = var.tags
-}
-
 resource "aws_cloudwatch_log_group" "cloudtrail_events" {
   count = var.cloudwatch_logs_enabled && var.enabled ? 1 : 0
 
   name              = var.cloudwatch_logs_group_name
   retention_in_days = var.cloudwatch_logs_retention_in_days
-
-  kms_key_id = aws_kms_key.cloudtrail_logs.arn
 
   tags = var.tags
 }
