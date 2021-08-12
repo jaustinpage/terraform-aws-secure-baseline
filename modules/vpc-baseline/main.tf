@@ -9,6 +9,7 @@ data "aws_availability_zones" "all" {
 # --------------------------------------------------------------------------------------------------
 # Enable VPC Flow Logs for the default VPC.
 # --------------------------------------------------------------------------------------------------
+#tfsec:ignore:AWS089
 resource "aws_cloudwatch_log_group" "default_vpc_flow_logs" {
   count = var.enabled && var.enable_flow_logs && local.is_cw_logs ? 1 : 0
 

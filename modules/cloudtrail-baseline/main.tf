@@ -1,6 +1,7 @@
 # --------------------------------------------------------------------------------------------------
 # CloudWatch Logs group to accept CloudTrail event stream.
 # --------------------------------------------------------------------------------------------------
+#tfsec:ignore:AWS089
 resource "aws_cloudwatch_log_group" "cloudtrail_events" {
   count = var.cloudwatch_logs_enabled && var.enabled ? 1 : 0
 
